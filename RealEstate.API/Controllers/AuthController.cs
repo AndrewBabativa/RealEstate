@@ -34,7 +34,7 @@ namespace RealEstate.API.Controllers
         {
             var response = await _loginHandler.Handle(request);
             if (response == null)
-                return Unauthorized(new { message = "Invalid credentials" });
+                return Unauthorized(new { message = "Credenciales invalidas." });
 
             return Ok(response);
         }

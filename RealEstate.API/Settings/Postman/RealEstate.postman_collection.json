@@ -1,0 +1,346 @@
+{
+	"info": {
+		"_postman_id": "568cbf9e-e535-40ce-b366-6f7afc6fa2b9",
+		"name": "Real Estate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4009330"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"AndrewBg\",\n    \"password\": \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7185/api/auth/register",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7185",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"pm.environment.set(\"authToken\", response.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"AndrewBg\",\r\n    \"password\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7185/api/auth/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7185",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GetAllProperties",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:7185/api/property?year=2020",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7185",
+					"path": [
+						"api",
+						"property"
+					],
+					"query": [
+						{
+							"key": "year",
+							"value": "2020"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateProperty",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Casa en la playa\",\n    \"address\": \"Calle 123, Miami Beach\",\n    \"codeInternal\": \"INT-2025-001\",\n    \"price\": 1500000,\n    \"year\": 2021,\n    \"ownerId\": 1\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7185/api/Property",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7185",
+					"path": [
+						"api",
+						"Property"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ExceptionMiddleware",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7185/api/test/error",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7185",
+					"path": [
+						"api",
+						"test",
+						"error"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UploadImageProperty",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "Image",
+							"type": "file",
+							"src": "/C:/Users/pepetoto588/Downloads/493260806_698840962497340_540704099578993944_n.jpg"
+						},
+						{
+							"key": "PropertyId",
+							"value": "9",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost:7185/api/propertyimage/upload",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7185",
+					"path": [
+						"api",
+						"propertyimage",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ChangePrice",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"PropertyId\": 9,\n    \"NewPrice\": 1000000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7185/api/Property",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7185",
+					"path": [
+						"api",
+						"Property"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateProperty",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"propertyId\": 9,\n    \"name\": \"Modern House Renovated\",\n    \"address\": \"456 Ocean View Ave\",\n    \"CodeInternal\" : \"00-1\",\n    \"year\": 2022\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7185/api/Property",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7185",
+					"path": [
+						"api",
+						"Property"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateOwner",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RealEstate.Common.Contracts.Auth.Request;
+using RealEstate.Common.Contracts.Owner.Request;
 using RealEstate.Common.Contracts.Owner.Responses;
 using RealEstate.Common.Contracts.Property.Request;
 using RealEstate.Common.Contracts.Property.Responses;
@@ -23,12 +24,16 @@ namespace RealEstate.Application.Mappings
                 .ForMember(dest => dest.Enabled, opt => opt.MapFrom(src => true));
 
             CreateMap<CreatePropertyTraceRequest, PropertyTraceEntity>();
+            CreateMap<CreateOwnerRequest, OwnerEntity>()
+             .ForMember(dest => dest.Photo, opt => opt.Ignore());
 
             // Entities -> Responses
             CreateMap<PropertyEntity, PropertyResponse>();
             CreateMap<OwnerEntity, OwnerResponse>();
             CreateMap<PropertyImageEntity, PropertyImageResponse>();
             CreateMap<PropertyTraceEntity, PropertyTraceResponse>();
+            CreateMap<OwnerEntity, OwnerResponse>();
+
         }
     }
 }

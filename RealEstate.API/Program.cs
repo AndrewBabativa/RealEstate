@@ -10,6 +10,9 @@ using RealEstate.Application.UseCases.Auth;
 using RealEstate.Infrastructure.Services;
 using RealEstate.Core.Contracts;
 using RealEstate.Application.Mappings;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using RealEstate.Common.Contracts.Owner.Request;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +67,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 
+builder.Services.AddScoped<CreateOwnerHandler>();
 builder.Services.AddScoped<LoginHandler>();
 builder.Services.AddScoped<RegisterHandler>();
 builder.Services.AddScoped<ChangePriceHandler>();
@@ -89,11 +93,20 @@ builder.Services.AddScoped<IDocumentStorageService, CloudinaryService>(provider 
 builder.Services.AddLogging(logging =>
 {
     logging.AddConsole();
-    logging.SetMinimumLevel(LogLevel.Debug); 
+    logging.SetMinimumLevel(LogLevel.Debug);
 });
 
 builder.Services.AddControllers();
-builder.Services.AddAutoMapper(typeof(MappingProfile)); 
+
+// FluentValidation para todos los request
+builder.Services
+    .AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateOwnerRequestValidator>();
+
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 var app = builder.Build();
@@ -106,7 +119,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseAuthentication();  
-app.UseAuthorization(); 
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();

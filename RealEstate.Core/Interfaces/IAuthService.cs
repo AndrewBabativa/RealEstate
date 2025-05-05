@@ -1,12 +1,8 @@
-﻿using RealEstate.Common.Contracts.Auth.Request;
-using RealEstate.Common.Contracts.Auth.Responses;
-using RealEstate.Common.Contracts.PropertyImage.Request;
+﻿using RealEstate.Core.Entities;
+using RealEstate.Core.ValueObjects;
 
-namespace RealEstate.Core.Contracts
+public interface IAuthService
 {
-    public interface IAuthService
-    {
-        Task<(bool Success, string Message)> RegisterAsync(RegisterAuthRequest request);
-        Task<AuthResponse?> LoginAsync(LoginAuthRequest request);
-    }
+    Task<(bool Success, string Message)> RegisterAsync(UserEntity user);
+    Task<UserEntity?> LoginAsync(AuthCredentials credentials);
 }

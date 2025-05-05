@@ -1,5 +1,7 @@
 using RealEstate.Common.Contracts.PropertyImage.Request;
 using RealEstate.Core.Contracts;
+using RealEstate.Core.Entities;
+using BCrypt.Net;
 
 namespace RealEstate.Application.UseCases.Auth
 {
@@ -14,7 +16,14 @@ namespace RealEstate.Application.UseCases.Auth
 
         public async Task<(bool Success, string Message)> Handle(RegisterAuthRequest request)
         {
-            return await _authService.RegisterAsync(request);
+            var user = new UserEntity
+            {
+                Username = request.Username,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
+            };
+
+            return await _authService.RegisterAsync(user);
         }
     }
+
 }

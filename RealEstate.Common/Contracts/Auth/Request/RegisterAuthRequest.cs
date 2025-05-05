@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Http;
 
-namespace RealEstate.Common.Contracts.Auth.Request
+namespace RealEstate.Common.Contracts.PropertyImage.Request
 {
-    public class AddImageRequest
+    public class RegisterAuthRequest
     {
-        public int PropertyId { get; set; }
-        public IFormFile Image { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
+
 }

@@ -1,5 +1,6 @@
 using AutoMapper;
 using RealEstate.Common.Contracts.Property.Request;
+using RealEstate.Common.Contracts.PropertyTrace.Request;
 using RealEstate.Common.Contracts.Property.Responses;
 using RealEstate.Core.Contracts;
 

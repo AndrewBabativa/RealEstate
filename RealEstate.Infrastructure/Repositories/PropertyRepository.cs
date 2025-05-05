@@ -1,8 +1,7 @@
-using RealEstate.Core.Entities;
-using RealEstate.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using RealEstate.Core.Contracts;
-using RealEstate.Common.Contracts.Property.Filters;
+using RealEstate.Core.Entities;
+using RealEstate.Infrastructure.Persistence;
 
 namespace RealEstate.Infrastructure.Repositories
 {
@@ -14,40 +13,34 @@ namespace RealEstate.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<PropertyEntity>> GetAllAsync(PropertyFilter filter, CancellationToken cancellationToken)
+
+        public async Task<IEnumerable<PropertyEntity>> GetAllAsync(
+            string? name = null,
+            decimal? minPrice = null,
+            decimal? maxPrice = null,
+            int? year = null,
+            CancellationToken cancellationToken = default)
         {
-            var query = _context.Properties
-                .Include(p => p.Images)
-                .Include(p => p.Owner)
-                .AsQueryable();
+            var query = _context.Properties.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(filter.Name))
-                query = query.Where(p => p.Name.Contains(filter.Name));
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(p => p.Name.Contains(name));
 
-            if (filter.MinPrice.HasValue)
-                query = query.Where(p => p.Price >= filter.MinPrice.Value);
+            if (minPrice.HasValue)
+                query = query.Where(p => p.Price >= minPrice.Value);
 
-            if (filter.MaxPrice.HasValue)
-                query = query.Where(p => p.Price <= filter.MaxPrice.Value);
+            if (maxPrice.HasValue)
+                query = query.Where(p => p.Price <= maxPrice.Value);
 
-            if (filter.Year.HasValue)
-                query = query.Where(p => p.Year == filter.Year.Value);
+            if (year.HasValue)
+                query = query.Where(p => p.Year == year.Value);
 
             return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<PropertyEntity?> GetByIdAsync(int id)
-        {
-            return await _context.Properties
-                .Include(p => p.Owner)
-                .Include(p => p.Images)
-                .Include(p => p.Traces)
-                .FirstOrDefaultAsync(p => p.PropertyId == id);
-        }
-
         public async Task AddAsync(PropertyEntity property)
         {
-            await _context.Properties.AddAsync(property);
+            _context.Properties.Add(property);
             await _context.SaveChangesAsync();
         }
 
@@ -60,9 +53,16 @@ namespace RealEstate.Infrastructure.Repositories
         public async Task ChangePriceAsync(int propertyId, decimal newPrice)
         {
             var property = await _context.Properties.FindAsync(propertyId);
-            property.Price = newPrice;
-            await _context.SaveChangesAsync();
+            if (property != null)
+            {
+                property.Price = newPrice;
+                await _context.SaveChangesAsync();
+            }
         }
 
+        public async Task<PropertyEntity?> GetByIdAsync(int id)
+        {
+            return await _context.Properties.FindAsync(id);
+        }
     }
 }

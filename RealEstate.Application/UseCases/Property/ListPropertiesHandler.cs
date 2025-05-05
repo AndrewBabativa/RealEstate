@@ -18,10 +18,16 @@ namespace RealEstate.Application.UseCases
 
         public async Task<IEnumerable<PropertyResponse>> Handle(PropertyFilter filter, CancellationToken cancellationToken)
         {
-            var properties = await _propertyRepository.GetAllAsync(filter, cancellationToken);
+            var properties = await _propertyRepository.GetAllAsync(
+                name: filter.Name,
+                minPrice: filter.MinPrice,
+                maxPrice: filter.MaxPrice,
+                year: filter.Year,
+                cancellationToken: cancellationToken
+            );
 
             if (!properties.Any())
-                throw new ArgumentException("No properties were found with the provided filter.");
+                return new List<PropertyResponse>();
 
             return _mapper.Map<List<PropertyResponse>>(properties);
         }

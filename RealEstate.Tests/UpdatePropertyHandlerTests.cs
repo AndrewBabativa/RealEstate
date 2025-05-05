@@ -2,7 +2,7 @@
 using AutoMapper;
 using NUnit.Framework;
 using RealEstate.Application.UseCases;
-using RealEstate.Common.DTOs.Requests;
+using RealEstate.Common.Contracts.Property.Request;
 using RealEstate.Core.Contracts;
 using RealEstate.Core.Entities;
 using RealEstate.Common.Contracts.Property.Responses;

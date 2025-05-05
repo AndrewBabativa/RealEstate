@@ -20,13 +20,8 @@ namespace RealEstate.API.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadImage([FromForm] AddImageRequest request)
         {
-            if (request.Image == null || request.Image.Length == 0)
-            {
-                return BadRequest("No image provided.");
-            }
-
             await _addImageToPropertyHandler.Handle(request);
-            return Ok("Image uploaded and property updated successfully.");
+            return Ok("Se cargó la imagen correctamente.");
         }
     }
 

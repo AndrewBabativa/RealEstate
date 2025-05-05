@@ -41,9 +41,6 @@ namespace RealEstate.API.Controllers
         [HttpPost]
         public async Task<ActionResult<PropertyResponse>> CreateProperty([FromBody] CreatePropertyRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var result = await _createPropertyHandler.Handle(request, CancellationToken.None);
             return CreatedAtAction(nameof(GetPropertyById), new { id = result.PropertyId }, result);
         }
