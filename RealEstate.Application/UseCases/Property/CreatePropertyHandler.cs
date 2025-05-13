@@ -1,13 +1,13 @@
 using AutoMapper;
 using RealEstate.Core.Entities;
 using RealEstate.Core.Contracts;
-using RealEstate.Common.Contracts.Owner.Responses;
-using RealEstate.Common.Contracts.Property.Request;
-using RealEstate.Common.Contracts.Property.Responses;
+using RealEstate.Application.DTOs.Owner;
+using RealEstate.Application.DTOs.Property;
+using RealEstate.Application.Interfaces.Property;
 
-namespace RealEstate.Application.UseCases
+namespace RealEstate.Application.UseCases.Property
 {
-    public class CreatePropertyHandler
+    public class CreatePropertyHandler : ICreatePropertyHandler
     {
         private readonly IPropertyRepository _propertyRepository;
         private readonly IOwnerRepository _ownerRepository;
@@ -22,40 +22,21 @@ namespace RealEstate.Application.UseCases
             _mapper = mapper;
         }
 
-        public async Task<PropertyResponse> Handle(CreatePropertyRequest request, CancellationToken cancellationToken)
+        public async Task<PropertyDto> Handle(CreatePropertyDto dto, CancellationToken cancellationToken)
         {
-            ValidateRequest(request);
+            var owner = await _ownerRepository.GetByIdAsync(dto.OwnerId)
+                        ?? throw new KeyNotFoundException($"Owner with ID {dto.OwnerId} not found.");
 
-            var owner = await _ownerRepository.GetByIdAsync(request.OwnerId)
-                        ?? throw new KeyNotFoundException($"Owner with ID {request.OwnerId} not found.");
-
-            var property = _mapper.Map<PropertyEntity>(request);
+            var property = _mapper.Map<PropertyEntity>(dto);
             await _propertyRepository.AddAsync(property);
 
-            property.Owner = owner; 
+            property.Owner = owner;
 
-            var response = _mapper.Map<PropertyResponse>(property);
-            response.Owner = _mapper.Map<OwnerResponse>(owner);
+            var response = _mapper.Map<PropertyDto>(property);
+            response.Owner = _mapper.Map<OwnerDto>(owner);
 
             return response;
         }
 
-        private void ValidateRequest(CreatePropertyRequest request)
-        {
-            if (request == null)
-                throw new ArgumentException("Request cannot be null");
-
-            if (string.IsNullOrWhiteSpace(request.Name))
-                throw new ArgumentException("Property name is required");
-
-            if (string.IsNullOrWhiteSpace(request.Address))
-                throw new ArgumentException("Property address is required");
-
-            if (request.Price <= 0)
-                throw new ArgumentException("Property price must be greater than zero");
-
-            if (request.Year < 1900 || request.Year > DateTime.Now.Year)
-                throw new ArgumentException("Invalid construction year");
-        }
     }
 }

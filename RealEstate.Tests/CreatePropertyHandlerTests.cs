@@ -2,11 +2,11 @@
 using AutoMapper;
 using NUnit.Framework;
 using RealEstate.Application.UseCases;
-using RealEstate.Common.Contracts.Property.Request;
+using RealEstate.Application.DTOs.Property;  // Asumimos que estos DTOs existen ahora
 using RealEstate.Core.Contracts;
 using RealEstate.Core.Entities;
-using RealEstate.Common.Contracts.Owner.Responses;
-using RealEstate.Common.Contracts.Property.Responses;
+using RealEstate.Application.DTOs.Owner;
+using RealEstate.Application.UseCases.Property;
 
 [TestFixture]
 public class CreatePropertyHandlerTests
@@ -24,18 +24,17 @@ public class CreatePropertyHandlerTests
         _mapperMock = new Mock<IMapper>();
 
         _handler = new CreatePropertyHandler(
-         _propertyRepoMock.Object,
-         _ownerRepoMock.Object,
-         _mapperMock.Object
-     );
-
+            _propertyRepoMock.Object,
+            _ownerRepoMock.Object,
+            _mapperMock.Object
+        );
     }
 
     [Test]
     public async Task Handle_ShouldCreateProperty_WhenRequestIsValid()
     {
         // Arrange
-        var request = new CreatePropertyRequest
+        var request = new CreatePropertyDto
         {
             Name = "Casa Linda",
             Address = "Calle 123",
@@ -57,7 +56,7 @@ public class CreatePropertyHandlerTests
             OwnerId = request.OwnerId
         };
 
-        var propertyResponse = new PropertyResponse
+        var propertyResponse = new PropertyDto
         {
             PropertyId = 1,
             Name = request.Name,
@@ -71,8 +70,7 @@ public class CreatePropertyHandlerTests
         _ownerRepoMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(owner);
 
         _mapperMock.Setup(m => m.Map<PropertyEntity>(request)).Returns(property);
-        _mapperMock.Setup(m => m.Map<PropertyResponse>(It.IsAny<PropertyEntity>())).Returns(propertyResponse);
-        _mapperMock.Setup(m => m.Map<OwnerResponse>(It.IsAny<OwnerEntity>())).Returns(new OwnerResponse());
+        _mapperMock.Setup(m => m.Map<PropertyDto>(It.IsAny<PropertyEntity>())).Returns(propertyResponse);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -83,12 +81,11 @@ public class CreatePropertyHandlerTests
         _propertyRepoMock.Verify(x => x.AddAsync(It.IsAny<PropertyEntity>()), Times.Once);
     }
 
-
     [Test]
     public void Handle_ShouldThrow_WhenOwnerDoesNotExist()
     {
         // Arrange
-        var request = new CreatePropertyRequest
+        var request = new CreatePropertyDto
         {
             Name = "Casa",
             Address = "Calle 1",

@@ -1,21 +1,19 @@
 ﻿using FluentValidation;
-using RealEstate.Common.Contracts.Auth.Request;
-using RealEstate.Common.Contracts.PropertyImage.Request;
+using RealEstate.Application.DTOs.PropertyImage;
 
 namespace RealEstate.Application.Validators.Property
 {
-    public class AddImageRequestValidator : AbstractValidator<AddImageRequest>
+    public class PropertyImageDtoValidator : AbstractValidator<PropertyImageDto>
     {
-        public AddImageRequestValidator()
+        public PropertyImageDtoValidator()
         {
             RuleFor(x => x.PropertyId)
                 .NotEmpty().WithMessage("El ID de la propiedad es obligatorio.");
 
-            RuleFor(x => x.Image)
-                .NotEmpty().WithMessage("La imagen es obligatoria.");
+            //RuleFor(x => x.Image)
+            //    .NotNull().WithMessage("La imagen es obligatoria.")
+            //    .Must(f => f.Length > 0).WithMessage("El archivo de imagen no puede estar vacío.");
 
-            RuleFor(x => x.Image)
-                .NotEmpty().WithMessage("El nombre del archivo es obligatorio.");
         }
     }
 }

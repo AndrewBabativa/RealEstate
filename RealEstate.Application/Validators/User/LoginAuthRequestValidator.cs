@@ -1,11 +1,11 @@
 using FluentValidation;
-using RealEstate.Common.Contracts.Auth.Request;
+using RealEstate.Application.DTOs.Auth;
 
 namespace RealEstate.Application.Validators.Auth
 {
-    public class LoginAuthRequestValidator : AbstractValidator<LoginAuthRequest>
+    public class LoginAuthDtoValidator : AbstractValidator<LoginDto>
     {
-        public LoginAuthRequestValidator()
+        public LoginAuthDtoValidator()
         {
             RuleFor(x => x.Username)
                 .NotEmpty().WithMessage("El nombre de usuario es obligatorio.")

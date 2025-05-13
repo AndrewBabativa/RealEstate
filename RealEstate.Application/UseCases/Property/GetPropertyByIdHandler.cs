@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-using RealEstate.Common.Contracts.Property.Responses;
+using RealEstate.Application.DTOs.Property;
+using RealEstate.Application.Interfaces.Property;
 using RealEstate.Core.Contracts;
 
-namespace RealEstate.Application.UseCases
+namespace RealEstate.Application.UseCases.Property
 {
-    public class GetPropertyByIdHandler
+    public class GetPropertyByIdHandler : IGetPropertyByIdHandler
     {
         private readonly IPropertyRepository _propertyRepository;
         private readonly IMapper _mapper;
@@ -15,14 +16,14 @@ namespace RealEstate.Application.UseCases
             _mapper = mapper;
         }
 
-        public async Task<PropertyResponse> Handle(int id, CancellationToken cancellationToken = default)
+        public async Task<PropertyDto> Handle(int id, CancellationToken cancellationToken = default)
         {
             var property = await _propertyRepository.GetByIdAsync(id);
 
             if (property == null)
                 throw new KeyNotFoundException($"Property with ID {id} not found.");
 
-            return _mapper.Map<PropertyResponse>(property);
+            return _mapper.Map<PropertyDto>(property);
         }
     }
 }

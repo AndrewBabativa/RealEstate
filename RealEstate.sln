@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstate.API", "RealEstat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstate.Tests", "RealEstate.Tests\RealEstate.Tests.csproj", "{0E55EE41-C8A6-4183-ABDD-68D626B1CB51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstate.Common", "RealEstate.Common\RealEstate.Common.csproj", "{31CFE145-F506-4772-B6EA-BFCFA2339C69}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,10 +39,6 @@ Global
 		{0E55EE41-C8A6-4183-ABDD-68D626B1CB51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E55EE41-C8A6-4183-ABDD-68D626B1CB51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E55EE41-C8A6-4183-ABDD-68D626B1CB51}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31CFE145-F506-4772-B6EA-BFCFA2339C69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31CFE145-F506-4772-B6EA-BFCFA2339C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31CFE145-F506-4772-B6EA-BFCFA2339C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31CFE145-F506-4772-B6EA-BFCFA2339C69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

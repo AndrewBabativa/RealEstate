@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using RealEstate.Application.UseCases;
+using RealEstate.Application.UseCases.Owner;
 using RealEstate.Infrastructure.Storage;
 using RealEstate.Infrastructure.Persistence;
-using RealEstate.Infrastructure.Repositories;
 using System.Text;
 using RealEstate.Application.UseCases.Auth;
 using RealEstate.Infrastructure.Services;
@@ -12,7 +11,12 @@ using RealEstate.Core.Contracts;
 using RealEstate.Application.Mappings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using RealEstate.Common.Contracts.Owner.Request;
+using RealEstate.Application.UseCases.Property;
+using RealEstate.Application.Validators.Owner;
+using RealEstate.Infrastructure.Persistence.Repositories;
+using RealEstate.Application.Interfaces.Property;
+using RealEstate.Application.Interfaces.Auth;
+using RealEstate.Application.Interfaces.Owner;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,16 +71,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApi();
 
-builder.Services.AddScoped<CreateOwnerHandler>();
-builder.Services.AddScoped<LoginHandler>();
-builder.Services.AddScoped<RegisterHandler>();
-builder.Services.AddScoped<ChangePriceHandler>();
-builder.Services.AddScoped<GetPropertyByIdHandler>();
-builder.Services.AddScoped<CreatePropertyHandler>();
-builder.Services.AddScoped<ListPropertiesHandler>();
-builder.Services.AddScoped<AddImageToPropertyHandler>();
-builder.Services.AddScoped<UpdatePropertyHandler>();
-builder.Services.AddScoped<CreatePropertyTraceHandler>();
+builder.Services.AddScoped<ICreateOwnerHandler, CreateOwnerHandler>();
+builder.Services.AddScoped<ILoginHandler, LoginHandler>();
+builder.Services.AddScoped<IRegisterHandler, RegisterHandler>();
+builder.Services.AddScoped<IChangePriceHandler, ChangePriceHandler>();
+builder.Services.AddScoped<IGetPropertyByIdHandler, GetPropertyByIdHandler>();
+builder.Services.AddScoped<ICreatePropertyHandler, CreatePropertyHandler>();
+builder.Services.AddScoped<IListPropertiesHandler, ListPropertiesHandler>();
+builder.Services.AddScoped<IAddImageToPropertyHandler, AddImageToPropertyHandler>();
+builder.Services.AddScoped<IUpdatePropertyHandler, UpdatePropertyHandler>();
+builder.Services.AddScoped<ICreatePropertyTraceHandler, CreatePropertyTraceHandler>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
@@ -103,7 +107,7 @@ builder.Services
     .AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters();
 
-builder.Services.AddValidatorsFromAssemblyContaining<CreateOwnerRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateOwnerDtoValidator>();
 
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));

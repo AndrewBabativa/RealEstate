@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using RealEstate.Core.Contracts;
 using RealEstate.Core.Entities;
-using RealEstate.Infrastructure.Persistence;
 
-namespace RealEstate.Infrastructure.Repositories
+namespace RealEstate.Infrastructure.Persistence.Repositories
 {
     public class PropertyRepository : IPropertyRepository
     {

@@ -1,11 +1,10 @@
-using RealEstate.Common.Contracts.PropertyImage.Request;
-using RealEstate.Core.Contracts;
+using RealEstate.Application.DTOs.Auth;
+using RealEstate.Application.Interfaces.Auth;
 using RealEstate.Core.Entities;
-using BCrypt.Net;
 
 namespace RealEstate.Application.UseCases.Auth
 {
-    public class RegisterHandler
+    public class RegisterHandler : IRegisterHandler
     {
         private readonly IAuthService _authService;
 
@@ -14,16 +13,15 @@ namespace RealEstate.Application.UseCases.Auth
             _authService = authService;
         }
 
-        public async Task<(bool Success, string Message)> Handle(RegisterAuthRequest request)
+        public async Task<(bool Success, string Message)> Handle(RegisterDto dto)
         {
             var user = new UserEntity
             {
-                Username = request.Username,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
+                Username = dto.Username,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
 
             return await _authService.RegisterAsync(user);
         }
     }
-
 }

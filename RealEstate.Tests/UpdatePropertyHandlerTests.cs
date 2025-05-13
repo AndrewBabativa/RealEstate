@@ -1,11 +1,10 @@
 ﻿using Moq;
 using AutoMapper;
 using NUnit.Framework;
-using RealEstate.Application.UseCases;
-using RealEstate.Common.Contracts.Property.Request;
+using RealEstate.Application.DTOs.Property; 
 using RealEstate.Core.Contracts;
 using RealEstate.Core.Entities;
-using RealEstate.Common.Contracts.Property.Responses;
+using RealEstate.Application.UseCases.Property;
 
 namespace RealEstate.Tests.UseCases
 {
@@ -28,7 +27,7 @@ namespace RealEstate.Tests.UseCases
         public async Task Handle_ShouldUpdateProperty_WhenPropertyExists()
         {
             // Arrange
-            var request = new UpdatePropertyRequest
+            var request = new UpdatePropertyDto  
             {
                 PropertyId = 1,
                 Name = "Casa Actualizada",
@@ -44,7 +43,7 @@ namespace RealEstate.Tests.UseCases
                 Year = 2010
             };
 
-            var updatedResponse = new PropertyResponse
+            var updatedResponse = new PropertyDto  
             {
                 PropertyId = 1,
                 Name = "Casa Actualizada",
@@ -53,12 +52,10 @@ namespace RealEstate.Tests.UseCases
             };
 
             _propertyRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(existingProperty);
-            _mapperMock.Setup(m => m.Map<PropertyResponse>(It.IsAny<PropertyEntity>())).Returns(updatedResponse);
+            _mapperMock.Setup(m => m.Map<PropertyDto>(It.IsAny<PropertyEntity>())).Returns(updatedResponse);
 
-            // Act
             var result = await _handler.Handle(request, CancellationToken.None);
 
-            // Assert
             Assert.AreEqual("Casa Actualizada", result.Name);
             Assert.AreEqual("Nueva Dirección", result.Address);
             Assert.AreEqual(2021, result.Year);
@@ -68,11 +65,9 @@ namespace RealEstate.Tests.UseCases
         [Test]
         public void Handle_ShouldThrow_WhenPropertyDoesNotExist()
         {
-            // Arrange
-            var request = new UpdatePropertyRequest { PropertyId = 99 };
+            var request = new UpdatePropertyDto { PropertyId = 99 };  
             _propertyRepoMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((PropertyEntity)null);
 
-            // Act & Assert
             var ex = Assert.ThrowsAsync<ArgumentException>(() =>
                 _handler.Handle(request, CancellationToken.None));
 

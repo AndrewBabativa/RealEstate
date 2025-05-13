@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using RealEstate.Common.Contracts.Property.Request;
+using RealEstate.Application.DTOs.Property;
 
-public class UpdatePropertyRequestValidator : AbstractValidator<UpdatePropertyRequest>
+public class UpdatePropertyDtoValidator : AbstractValidator<UpdatePropertyDto>
 {
-    public UpdatePropertyRequestValidator()
+    public UpdatePropertyDtoValidator()
     {
         RuleFor(x => x.PropertyId)
             .GreaterThan(0).WithMessage("El ID de la propiedad debe ser mayor que 0.");

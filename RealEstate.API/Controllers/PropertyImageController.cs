@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RealEstate.Application.UseCases;
-using RealEstate.Common.Contracts.Auth.Request;
+using RealEstate.Application.DTOs.PropertyImage;
+using RealEstate.Application.Interfaces.Property;
 
 namespace RealEstate.API.Controllers
 {
@@ -10,17 +10,17 @@ namespace RealEstate.API.Controllers
     [ApiController]
     public class PropertyImageController : ControllerBase
     {
-        private readonly AddImageToPropertyHandler _addImageToPropertyHandler;
+        private readonly IAddImageToPropertyHandler _addImageToPropertyHandler;
 
-        public PropertyImageController(AddImageToPropertyHandler addImageToPropertyHandler)
+        public PropertyImageController(IAddImageToPropertyHandler addImageToPropertyHandler)
         {
             _addImageToPropertyHandler = addImageToPropertyHandler;
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadImage([FromForm] AddImageRequest request)
+        public async Task<IActionResult> UploadImage([FromForm] PropertyImageDto propertyImageDto)
         {
-            await _addImageToPropertyHandler.Handle(request);
+            await _addImageToPropertyHandler.Handle(propertyImageDto);
             return Ok("Se cargó la imagen correctamente.");
         }
     }

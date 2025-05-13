@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RealEstate.Application.UseCases.Auth;
-using RealEstate.Common.Contracts.Auth.Request;
-using RealEstate.Common.Contracts.Auth.Responses;
-using RealEstate.Common.Contracts.PropertyImage.Request;
+using RealEstate.Application.DTOs.Auth;
+using RealEstate.Application.Interfaces.Auth;
+using AutoMapper;
 
 namespace RealEstate.API.Controllers
 {
@@ -10,19 +9,22 @@ namespace RealEstate.API.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly RegisterHandler _registerHandler;
-        private readonly LoginHandler _loginHandler;
+        private readonly IRegisterHandler _registerHandler;
+        private readonly ILoginHandler _loginHandler;
+        private readonly IMapper _mapper;
 
-        public AuthController(RegisterHandler registerHandler, LoginHandler loginHandler)
+        public AuthController(IRegisterHandler registerHandler, ILoginHandler loginHandler, IMapper mapper)
         {
             _registerHandler = registerHandler;
             _loginHandler = loginHandler;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterAuthRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            var result = await _registerHandler.Handle(request);
+            var result = await _registerHandler.Handle(registerDto);
+
             if (!result.Success)
                 return BadRequest(new { message = result.Message });
 
@@ -30,11 +32,11 @@ namespace RealEstate.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginAuthRequest request)
+        public async Task<ActionResult<AuthResultDto>> Login([FromBody] LoginDto loginDto)
         {
-            var response = await _loginHandler.Handle(request);
+            var response = await _loginHandler.Handle(loginDto);
             if (response == null)
-                return Unauthorized(new { message = "Credenciales invalidas." });
+                return Unauthorized(new { message = "Credenciales inválidas." });
 
             return Ok(response);
         }

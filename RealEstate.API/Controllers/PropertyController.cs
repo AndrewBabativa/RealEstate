@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RealEstate.Application.UseCases;
-using RealEstate.Common.Contracts.Property.Filters;
-using RealEstate.Common.Contracts.Property.Request;
-using RealEstate.Common.Contracts.Property.Responses;
+using RealEstate.Application.DTOs.Property;
+using RealEstate.Application.Interfaces.Property;
 
 namespace RealEstate.API.Controllers
 {
@@ -12,17 +10,18 @@ namespace RealEstate.API.Controllers
     [ApiController]
     public class PropertyController : ControllerBase
     {
-        private readonly ListPropertiesHandler _listPropertiesHandler;
-        private readonly CreatePropertyHandler _createPropertyHandler;
-        private readonly GetPropertyByIdHandler _getPropertyByIdHandler;
-        private readonly ChangePriceHandler _changePriceHandler;
-        private readonly UpdatePropertyHandler _updatePropertyHandler;
+        private readonly IListPropertiesHandler _listPropertiesHandler;
+        private readonly ICreatePropertyHandler _createPropertyHandler;
+        private readonly IGetPropertyByIdHandler _getPropertyByIdHandler;
+        private readonly IChangePriceHandler _changePriceHandler;
+        private readonly IUpdatePropertyHandler _updatePropertyHandler;
 
-        public PropertyController(ListPropertiesHandler listPropertiesHandler,
-                                  CreatePropertyHandler createPropertyHandler,
-                                  GetPropertyByIdHandler getPropertyByIdHandler,
-                                  ChangePriceHandler changePriceHandler,
-                                  UpdatePropertyHandler updatePropertyHandler)
+        public PropertyController(
+            IListPropertiesHandler listPropertiesHandler,
+            ICreatePropertyHandler createPropertyHandler,
+            IGetPropertyByIdHandler getPropertyByIdHandler,
+            IChangePriceHandler changePriceHandler,
+            IUpdatePropertyHandler updatePropertyHandler)
         {
             _listPropertiesHandler = listPropertiesHandler;
             _createPropertyHandler = createPropertyHandler;
@@ -32,38 +31,41 @@ namespace RealEstate.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PropertyResponse>>> GetAllProperties([FromQuery] PropertyFilter filter)
+        public async Task<ActionResult<IEnumerable<PropertyDto>>> GetAllProperties([FromQuery] PropertyFilterDto propertyFilterDto)
         {
-            var properties = await _listPropertiesHandler.Handle(filter, CancellationToken.None);
+            var properties = await _listPropertiesHandler.Handle(propertyFilterDto, CancellationToken.None);
             return Ok(properties);
         }
 
         [HttpPost]
-        public async Task<ActionResult<PropertyResponse>> CreateProperty([FromBody] CreatePropertyRequest request)
+        public async Task<ActionResult<PropertyDto>> CreateProperty([FromBody] CreatePropertyDto createPropertyDto)
         {
-            var result = await _createPropertyHandler.Handle(request, CancellationToken.None);
+            var result = await _createPropertyHandler.Handle(createPropertyDto, CancellationToken.None);
             return CreatedAtAction(nameof(GetPropertyById), new { id = result.PropertyId }, result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPropertyById(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<PropertyDto>> GetPropertyById(int id, CancellationToken cancellationToken)
         {
             var property = await _getPropertyByIdHandler.Handle(id, cancellationToken);
+            if (property == null)
+            {
+                return NotFound();
+            }
             return Ok(property);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProperty([FromBody] UpdatePropertyRequest request)
+        public async Task<IActionResult> UpdateProperty([FromBody] UpdatePropertyDto updatePropertyDto)
         {
-            var updatedProperty = await _updatePropertyHandler.Handle(request, CancellationToken.None);
+            var updatedProperty = await _updatePropertyHandler.Handle(updatePropertyDto, CancellationToken.None);
             return Ok(updatedProperty);
         }
 
-
         [HttpPatch]
-        public async Task<IActionResult> ChangePrice([FromBody] ChangePriceRequest request)
+        public async Task<IActionResult> ChangePrice([FromBody] ChangePriceDto changePriceDto)
         {
-            var updatedProperty = await _changePriceHandler.Handle(request, CancellationToken.None);
+            var updatedProperty = await _changePriceHandler.Handle(changePriceDto, CancellationToken.None);
             return Ok(updatedProperty);
         }
     }

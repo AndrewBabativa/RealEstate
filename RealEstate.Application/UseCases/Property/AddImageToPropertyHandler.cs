@@ -1,11 +1,12 @@
 using AutoMapper;
-using RealEstate.Common.Contracts.Auth.Request;
+using RealEstate.Application.DTOs.PropertyImage;
+using RealEstate.Application.Interfaces.Property;
 using RealEstate.Core.Contracts;
 using RealEstate.Core.Entities;
 
-namespace RealEstate.Application.UseCases
+namespace RealEstate.Application.UseCases.Property
 {
-    public class AddImageToPropertyHandler
+    public class AddImageToPropertyHandler : IAddImageToPropertyHandler
     {
         private readonly IDocumentStorageService _documentStorageService;
         private readonly IPropertyRepository _propertyRepository;
@@ -24,7 +25,7 @@ namespace RealEstate.Application.UseCases
             _mapper = mapper;
         }
 
-        public async Task Handle(AddImageRequest request)
+        public async Task Handle(PropertyImageDto request)
         {
             var property = await _propertyRepository.GetByIdAsync(request.PropertyId)
                               ?? throw new ArgumentException("Property not found.");

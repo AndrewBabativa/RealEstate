@@ -1,11 +1,11 @@
 using AutoMapper;
 using RealEstate.Core.Contracts;
-using RealEstate.Common.Contracts.Property.Filters;
-using RealEstate.Common.Contracts.Property.Responses;
+using RealEstate.Application.DTOs.Property;
+using RealEstate.Application.Interfaces.Property;
 
-namespace RealEstate.Application.UseCases
+namespace RealEstate.Application.UseCases.Property
 {
-    public class ListPropertiesHandler
+    public class ListPropertiesHandler : IListPropertiesHandler
     {
         private readonly IPropertyRepository _propertyRepository;
         private readonly IMapper _mapper;
@@ -16,7 +16,7 @@ namespace RealEstate.Application.UseCases
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PropertyResponse>> Handle(PropertyFilter filter, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PropertyDto>> Handle(PropertyFilterDto filter, CancellationToken cancellationToken)
         {
             var properties = await _propertyRepository.GetAllAsync(
                 name: filter.Name,
@@ -27,9 +27,9 @@ namespace RealEstate.Application.UseCases
             );
 
             if (!properties.Any())
-                return new List<PropertyResponse>();
+                return new List<PropertyDto>();
 
-            return _mapper.Map<List<PropertyResponse>>(properties);
+            return _mapper.Map<List<PropertyDto>>(properties);
         }
     }
 }

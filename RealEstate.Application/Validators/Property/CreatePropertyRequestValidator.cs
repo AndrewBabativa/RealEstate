@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using RealEstate.Common.Contracts.Property.Request;
+using RealEstate.Application.DTOs.Property;
 
 namespace RealEstate.Application.Validators.Property
 {
-    public class CreatePropertyRequestValidator : AbstractValidator<CreatePropertyRequest>
+    public class CreatePropertyDtoValidator : AbstractValidator<CreatePropertyDto>
     {
-        public CreatePropertyRequestValidator()
+        public CreatePropertyDtoValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("El nombre es obligatorio.")

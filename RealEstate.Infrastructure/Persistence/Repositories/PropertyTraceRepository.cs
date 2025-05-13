@@ -1,9 +1,8 @@
 using RealEstate.Core.Entities;
-using RealEstate.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using RealEstate.Core.Contracts;
 
-namespace RealEstate.Infrastructure.Repositories
+namespace RealEstate.Infrastructure.Persistence.Repositories
 {
     public class PropertyTraceRepository : IPropertyTraceRepository
     {

@@ -1,10 +1,8 @@
 using RealEstate.Core.Entities;
-using RealEstate.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using RealEstate.Core.Contracts;
 
-namespace RealEstate.Infrastructure.Repositories
+namespace RealEstate.Infrastructure.Persistence.Repositories
 {
     public class PropertyImageRepository : IPropertyImageRepository
     {

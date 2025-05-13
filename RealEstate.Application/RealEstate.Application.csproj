@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RealEstate.Common\RealEstate.Common.csproj" />
     <ProjectReference Include="..\RealEstate.Core\RealEstate.Core.csproj" />
   </ItemGroup>
 

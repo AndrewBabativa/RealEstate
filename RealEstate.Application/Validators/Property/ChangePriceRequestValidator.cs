@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using RealEstate.Common.Contracts.Property.Request;
+using RealEstate.Application.DTOs.Property;
 
 namespace RealEstate.Application.Validators.Property
 {
-    public class ChangePriceRequestValidator : AbstractValidator<ChangePriceRequest>
+    public class ChangePriceDtoValidator : AbstractValidator<ChangePriceDto>
     {
-        public ChangePriceRequestValidator()
+        public ChangePriceDtoValidator()
         {
             RuleFor(x => x.PropertyId)
                 .NotEmpty().WithMessage("El ID de la propiedad es obligatorio.");

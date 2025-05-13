@@ -1,8 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using RealEstate.Common.Contracts.Auth.Request;
-using RealEstate.Common.Contracts.Auth.Responses;
-using RealEstate.Core.Contracts;
+using RealEstate.Application.DTOs.Auth;
+using RealEstate.Application.Interfaces.Auth;
 using RealEstate.Core.ValueObjects;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,7 +9,7 @@ using System.Text;
 
 namespace RealEstate.Application.UseCases.Auth
 {
-    public class LoginHandler
+    public class LoginHandler : ILoginHandler
     {
         private readonly IAuthService _authService;
         private readonly IConfiguration _configuration;
@@ -21,9 +20,9 @@ namespace RealEstate.Application.UseCases.Auth
             _configuration = configuration;
         }
 
-        public async Task<AuthResponse?> Handle(LoginAuthRequest request)
+        public async Task<AuthResultDto?> Handle(LoginDto dto)
         {
-            var credentials = new AuthCredentials(request.Username, request.Password);
+            var credentials = new AuthCredentials(dto.Username, dto.Password);
             var user = await _authService.LoginAsync(credentials);
 
             if (user == null)
@@ -49,7 +48,7 @@ namespace RealEstate.Application.UseCases.Auth
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return new AuthResponse
+            return new AuthResultDto
             {
                 Username = user.Username,
                 Token = tokenHandler.WriteToken(token)

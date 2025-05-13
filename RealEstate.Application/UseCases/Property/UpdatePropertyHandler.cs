@@ -1,11 +1,11 @@
 using AutoMapper;
-using RealEstate.Common.Contracts.Property.Request;
-using RealEstate.Common.Contracts.Property.Responses;
+using RealEstate.Application.DTOs.Property;
+using RealEstate.Application.Interfaces.Property;
 using RealEstate.Core.Contracts;
 
-namespace RealEstate.Application.UseCases
+namespace RealEstate.Application.UseCases.Property
 {
-    public class UpdatePropertyHandler
+    public class UpdatePropertyHandler : IUpdatePropertyHandler
     {
         private readonly IPropertyRepository _repository;
         private readonly IMapper _mapper;
@@ -16,7 +16,7 @@ namespace RealEstate.Application.UseCases
             _mapper = mapper;
         }
 
-        public async Task<PropertyResponse> Handle(UpdatePropertyRequest request, CancellationToken cancellationToken)
+        public async Task<PropertyDto> Handle(UpdatePropertyDto request, CancellationToken cancellationToken)
         {
             var property = await _repository.GetByIdAsync(request.PropertyId);
 
@@ -29,7 +29,7 @@ namespace RealEstate.Application.UseCases
 
             await _repository.UpdateAsync(property);
 
-            return _mapper.Map<PropertyResponse>(property);
+            return _mapper.Map<PropertyDto>(property);
         }
     }
 }

@@ -1,11 +1,11 @@
 using FluentValidation;
-using RealEstate.Common.Contracts.PropertyImage.Request;
+using RealEstate.Application.DTOs.Auth;
 
-namespace RealEstate.Application.Validators.PropertyImage
+namespace RealEstate.Application.Validators.Auth
 {
-    public class RegisterAuthRequestValidator : AbstractValidator<RegisterAuthRequest>
+    public class RegisterAuthDtoValidator : AbstractValidator<RegisterDto>
     {
-        public RegisterAuthRequestValidator()
+        public RegisterAuthDtoValidator()
         {
             RuleFor(x => x.Username)
                 .NotEmpty().WithMessage("El nombre de usuario es obligatorio.")
@@ -14,6 +14,7 @@ namespace RealEstate.Application.Validators.PropertyImage
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("La contraseña es obligatoria.")
                 .MinimumLength(6).WithMessage("La contraseña debe tener al menos 6 caracteres.");
+
         }
     }
 }

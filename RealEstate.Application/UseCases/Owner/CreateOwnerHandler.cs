@@ -1,12 +1,12 @@
 using AutoMapper;
 using RealEstate.Core.Entities;
 using RealEstate.Core.Contracts;
-using RealEstate.Common.Contracts.Owner.Request;
-using RealEstate.Common.Contracts.Owner.Responses;
+using RealEstate.Application.DTOs.Owner;
+using RealEstate.Application.Interfaces.Owner;
 
-namespace RealEstate.Application.UseCases
+namespace RealEstate.Application.UseCases.Owner
 {
-    public class CreateOwnerHandler
+    public class CreateOwnerHandler : ICreateOwnerHandler
     {
         private readonly IOwnerRepository _ownerRepository;
         private readonly IDocumentStorageService _documentStorageService;
@@ -22,19 +22,22 @@ namespace RealEstate.Application.UseCases
             _mapper = mapper;
         }
 
-        public async Task<OwnerResponse> Handle(CreateOwnerRequest request, CancellationToken cancellationToken)
+        public async Task<OwnerDto> Handle(CreateOwnerDto ownerDto, CancellationToken cancellationToken)
         {
             string? photoUrl = null;
 
-            if (request.Photo != null)
+            if (ownerDto.PhotoFile != null)
             {
-                photoUrl = await _documentStorageService.UploadImageAsync(request.Photo);
+                photoUrl = await _documentStorageService.UploadImageAsync(ownerDto.PhotoFile);
             }
 
-            var owner = _mapper.Map<OwnerEntity>(request);
-            owner.Photo = photoUrl;
-            await _ownerRepository.AddAsync(owner);
-            var response = _mapper.Map<OwnerResponse>(owner);
+            var ownerEntity = _mapper.Map<OwnerEntity>(ownerDto);
+            ownerEntity.Photo = photoUrl; 
+
+            await _ownerRepository.AddAsync(ownerEntity);
+
+            var response = _mapper.Map<OwnerDto>(ownerEntity);
+            response.PhotoUrl = photoUrl; 
 
             return response;
         }

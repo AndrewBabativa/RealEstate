@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using RealEstate.Application.UseCases;
-using RealEstate.Common.Contracts.Owner.Request;
-using RealEstate.Common.Contracts.Owner.Responses;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using RealEstate.Application.DTOs.Owner;
+using RealEstate.Application.Interfaces.Owner;
 
 namespace RealEstate.API.Controllers
 {
@@ -11,24 +10,24 @@ namespace RealEstate.API.Controllers
     [Route("api/[controller]")]
     public class OwnersController : ControllerBase
     {
-        private readonly CreateOwnerHandler _createOwnerHandler;
+        private readonly ICreateOwnerHandler _createOwnerHandler;
 
-        public OwnersController(CreateOwnerHandler createOwnerHandler)
+        public OwnersController(ICreateOwnerHandler createOwnerHandler)
         {
-            _createOwnerHandler = createOwnerHandler; 
+            _createOwnerHandler = createOwnerHandler;
         }
 
         [HttpPost]
-        public async Task<ActionResult<OwnerResponse>> CreateOwner([FromForm] CreateOwnerRequest request, CancellationToken cancellationToken)
+        public async Task<ActionResult<OwnerDto>> CreateOwner([FromForm] CreateOwnerDto createOwnerDto, CancellationToken cancellationToken)
         {
-            var response = await _createOwnerHandler.Handle(request, cancellationToken); 
+            var response = await _createOwnerHandler.Handle(createOwnerDto, cancellationToken);
             return CreatedAtAction(nameof(GetOwnerById), new { id = response.OwnerId }, response);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetOwnerById(int id)
+        public async Task<ActionResult<OwnerDto>> GetOwnerById(int id)
         {
-            return Ok(); 
+            return StatusCode(StatusCodes.Status501NotImplemented, "This endpoint is not yet implemented.");
         }
     }
 }
