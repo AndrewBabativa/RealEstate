@@ -52,142 +52,123 @@ git clone [https://github.com/usuario/RealEstate.git](https://github.com/AndrewB
 ## 📁 Estructura del Proyecto
 
 ```text
+ ┌──────────────────────────────┐
+ │        Presentation          │ ← API Controllers
+ │        (RealEstate.API)      │
+ └────────────┬─────────────────┘
+              │
+              ▼
+ ┌──────────────────────────────┐
+ │         Application          │ ← Use Cases, DTOs, Interfaces
+ │ (RealEstate.Application)     │
+ └────────────┬─────────────────┘
+              │
+              ▼
+ ┌──────────────────────────────┐
+ │            Core              │ ← Entidades, Reglas de Negocio, Contratos
+ │     (RealEstate.Core)        │
+ └────────────┬─────────────────┘
+              │
+              ▼
+ ┌──────────────────────────────┐
+ │          Infrastructure      │ ← EF Core, Servicios externos, Repositorios
+ │  (RealEstate.Infrastructure) │
+ └──────────────────────────────┘
+```
+
+```text
+
 RealEstate
 │
 ├── RealEstate.sln
 │
 ├── RealEstate.Core
 │   ├── RealEstate.Core.csproj
+│   ├── Entities
+│   │   ├── OwnerEntity.cs
+│   │   ├── PropertyEntity.cs
+│   │   ├── PropertyImageEntity.cs
+│   │   └── PropertyTraceEntity.cs
 │   └── Contracts
+│       ├── IDocumentStorageService.cs
 │       ├── IOwnerRepository.cs
 │       ├── IPropertyRepository.cs
 │       ├── IPropertyImageRepository.cs
 │       └── IPropertyTraceRepository.cs
-│   └── Domain
-│       └── Entity
-│           ├── OwnerEntity.cs
-│           ├── PropertyEntity.cs
-│           ├── PropertyImageEntity.cs
-│           └── PropertyTraceEntity.cs
-│   └── ValueObjects
-│           └── AuthCredentials.cs
 │
 ├── RealEstate.Application
 │   ├── RealEstate.Application.csproj
-│   ├── Mappings
-│   │   └── MappingProfile.cs
-│   └── UseCases
-│       ├── Auth
-│       │   ├── LoginHandler.cs
-│       │   └── RegisterHandler.cs
-│       ├── Owner
-│       │   └── CreateOwnerHandler.cs
-│       ├── Property
-│       │   ├── CreatePropertyHandler.cs
-│       │   ├── UpdatePropertyHandler.cs
-│       │   ├── ChangePropertyPriceHandler.cs
-│       │   └── ListPropertiesHandler.cs
-│       ├── PropertyImage
-│       │   └── AddImageToPropertyHandler.cs
-│       └── PropertyTrace
-│           └── CreatePropertyTraceHandler.cs
-│   └── Validators
-│       ├── Owner
-│       │   └── CreateOwnerRequestValidator.cs
-│       ├── Property
-│       │   ├── AddImageRequestValidator.cs
-│       │   ├── ChangePriceRequestValidator.cs
-│       │   ├── CreatePropertyRequestValidator.cs
-│       │   └── UpdatePropertyRequestValidator.cs
-│       ├── Users
-│       │   └── LoginAuthRequestValidator.cs
-│       │   └── RegisterAuthRequestValidator.cs
-│
-├── RealEstate.Common
-│   ├── RealEstate.Common.csproj
-│   └── Contracts
-│       ├── Owner
-│       │   ├── Requests
-│       │   │   └── CreateOwnerRequest.cs
-│       │   └── Responses
-│       │       └── OwnerResponse.cs
-│       ├── Property
-│       │   ├── Requests
-│       │   │   ├── CreatePropertyRequest.cs
-│       │   │   ├── UpdatePropertyRequest.cs
-│       │   │   └── ChangePriceRequest.cs
-│       │   ├── Responses
-│       │   │   └── PropertyResponse.cs
-│       │   └── Filters
-│       │       └── PropertyFilter.cs
-│       ├── PropertyImage
-│       │   ├── Requests
-│       │   │   └── AddImageRequest.cs
-│       │   └── Responses
-│       │       └── PropertyImageResponse.cs
-│       └── PropertyTrace
-│           ├── Requests
-│           │   └── CreatePropertyTraceRequest.cs
-│           └── Responses
-│               └── PropertyTraceResponse.cs
+│   ├── DTOs
+│   │   ├── Auth
+│   │   │   ├── LoginDto.cs
+│   │   │   └── RegisterDto.cs
+│   │   ├── Owner
+│   │   │   ├── CreateOwnerDto.cs
+│   │   │   └── OwnerDto.cs
+│   │   ├── Property
+│   │   │   ├── CreatePropertyDto.cs
+│   │   │   ├── UpdatePropertyDto.cs
+│   │   │   ├── ChangePriceDto.cs
+│   │   │   └── PropertyDto.cs
+│   │   ├── PropertyImage
+│   │   │   └── PropertyImageDto.cs
+│   │   └── PropertyTrace
+│   │       ├── CreatePropertyTraceDto.cs
+│   │       └── PropertyTraceDto.cs
+│   ├── Interfaces
+│   │   ├── Auth
+│   │   │   └── ILoginHandler.cs
+│   │   │   └── IRegisterHandler.cs
+│   │   ├── Owner
+│   │   │   └── ICreateOwnerHandler.cs
+│   │   └── Property
+│   │       ├── ICreatePropertyHandler.cs
+│   │       ├── IUpdatePropertyHandler.cs
+│   │       ├── IChangePriceHandler.cs
+│   │       ├── ICreatePropertyImageHandler.cs
+│   │       ├── ICreatePropertyTraceHandler.cs
+│   │       └── IDeletePropertyHandler.cs
+│   ├── UseCases
+│   │   ├── Owner
+│   │   │   └── CreateOwnerHandler.cs
+│   │   └── Property
+│   │       ├── CreatePropertyHandler.cs
+│   │       ├── UpdatePropertyHandler.cs
+│   │       ├── ChangePriceHandler.cs
+│   │       ├── CreatePropertyImageHandler.cs
+│   │       ├── CreatePropertyTraceHandler.cs
+│   │       └── DeletePropertyHandler.cs
+│   │   └── Auth
+│   │       ├── LoginHandler.cs
+│   │       ├── RegisterHandler.cs
+│   └── Mappings
+│       └── MappingProfile.cs
 │
 ├── RealEstate.Infrastructure
 │   ├── RealEstate.Infrastructure.csproj
-│   ├── Persistence
-│   │   └── RealEstateDbContext.cs
-│   ├── Migrations
+│   ├── Data
+│   │   ├── RealEstateDbContext.cs
 │   ├── Repositories
 │   │   ├── OwnerRepository.cs
 │   │   ├── PropertyRepository.cs
 │   │   ├── PropertyImageRepository.cs
 │   │   └── PropertyTraceRepository.cs
 │   └── Services
-│       ├── AuthService.cs
-│       └── CloudinaryService.cs
+│       └── AuthService.cs
+│       └── DocumentStorageService.cs
 │
 ├── RealEstate.API
 │   ├── RealEstate.API.csproj
-│   ├── Program.cs
-│   ├── Startup.cs
 │   ├── Controllers
-│   │   ├── AuthController.cs
 │   │   ├── OwnerController.cs
 │   │   ├── PropertyController.cs
 │   │   ├── PropertyImageController.cs
-│   │   └── PropertyTraceController.cs
+│   │   └── AuthController.cs
 │   ├── Middlewares
 │   │   └── ExceptionMiddleware.cs
-│   └── Security
-│       └── JwtSettings.cs
+│   ├── Program.cs
 │
-├── RealEstate.Tests
-│   ├── RealEstate.Tests.csproj
-│   ├── CreatePropertyHandlerTests.cs
-│   └── UpdatePropertyHandlerTests.cs
-```
-# Validación de la Arquitectura con NDepend
-
-Esta sección explica cómo utilizamos **NDepend** para analizar y asegurar que la arquitectura de la aplicación siga las mejores prácticas y principios de diseño. Las siguientes capturas de **NDepend** demuestran la calidad y estructura del código.
-
-## 1. Gráfico de Dependencias
-
-![image](https://github.com/user-attachments/assets/82223a9d-d8fc-4efc-b5d1-0cdd51b4a510)
-
-
-El **Gráfico de Dependencias** muestra las relaciones entre los diferentes módulos o capas del sistema. Esto ayuda a asegurar que la arquitectura siga una correcta separación de responsabilidades y que no existan dependencias no deseadas entre las capas (por ejemplo, que la lógica de negocio dependa directamente de las capas de acceso a datos).
-
-## 2. Matriz de Dependencias
-
-![image](https://github.com/user-attachments/assets/4ac8774e-6b05-45b9-a0ef-17a66da0be6f)
-
-La **Matriz de Dependencias** muestra una matriz de dependencias entre los módulos, destacando qué módulos dependen de cuáles otros. Esta herramienta es útil para visualizar y prevenir dependencias circulares, asegurando que el sistema se mantenga modular y fácil de mantener.
-
-## 3. Métricas de NDepend
-
-![image](https://github.com/user-attachments/assets/d4c79f94-4c43-450f-b266-ba342de3edb3)
-
-
-Las **Métricas de NDepend** proporcionan estadísticas detalladas sobre la calidad del código, como la complejidad ciclomática, la cobertura del código y la mantenibilidad. Esto nos permite monitorear la salud del proyecto e identificar áreas que pueden requerir refactorización o atención adicional.
+└── README.md
 
 ---
 
@@ -201,7 +182,6 @@ Owners
      ├──< PropertyImages
      └──< PropertyTrace
 ```
-
 ---
 
 ## ⚙️ Tecnologías y Aplicación Técnica
@@ -242,7 +222,7 @@ En el desarrollo del sistema **RealEstate**, se aplicaron múltiples tecnología
 - **📦 Inyección de Dependencias (DI)**  
   Toda la configuración de servicios y repositorios está gestionada desde `Program.cs`, siguiendo los principios de SOLID, en especial la inversión de dependencias.
 
- - **🧩 Capa `RealEstate.Common` (Transversal de Contratos)**
+ - **🧩 Capa `RealEstate.Common` (Transversal de Contratos) (Ya no aplica)**
    
    La solución cuenta con una capa transversal denominada `RealEstate.Common`, cuyo objetivo principal es **centralizar los contratos de comunicación (DTOs)** que fluyen entre las capas del sistema, especialmente entre el frontend, la 
    API y la lógica de dominio.
